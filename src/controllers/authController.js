@@ -6,7 +6,7 @@ const jwt = require("jsonwebtoken");
 
 const authConfig = require("../config/auth");
 
-router.get("/", async function (req, res) {});
+
 
 function generateToken(params = {}) {
   return jwt.sign(params, authConfig.secret, {
@@ -43,7 +43,7 @@ router.post("/authenticate", async function (req, res) {
   }
   user.password = undefined;
 
-  const token = res.send({ user, token: generateToken({id: user.id}) });
+ res.send({ user, token: generateToken({id: user.id}) });
 });
 
 module.exports = router;
