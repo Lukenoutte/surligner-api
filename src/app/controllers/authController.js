@@ -1,12 +1,11 @@
 const express = require("express");
-const User = require("../models/User");
+const User = require("../../models/User");
 const router = express.Router();
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const crypto  = require("crypto");
 
-const authConfig = require("../config/auth");
-
-
+const authConfig = require("../../config/auth");
 
 function generateToken(params = {}) {
   return jwt.sign(params, authConfig.secret, {
@@ -23,7 +22,7 @@ router.post("/register", async function (req, res) {
     const user = await User.create(req.body);
     user.password = undefined;
 
-    return res.send({ user, token: generateToken({id: user.id}) });
+    return res.send({ user, token: generateToken({ id: user.id }) });
   } catch (err) {
     return res.status(400).send({ error: "Resgistration falied" });
   }
@@ -43,7 +42,32 @@ router.post("/authenticate", async function (req, res) {
   }
   user.password = undefined;
 
- res.send({ user, token: generateToken({id: user.id}) });
+  res.send({ user, token: generateToken({ id: user.id }) });
+});
+
+router.post("/forgot_password", async function (req, res) {
+  const { email } = req.body;
+
+  try {
+    const user = await User.findOne({ email });
+
+    if (!user) res.status(400).send({ error: "User not found" });
+
+    const token = crypto.randomBytes(20).toString("hex");
+
+    const now = new Date();
+    now.setHours( now.getHours + 1);
+
+    await User.findByIdAndUpdate(user.id, {
+      "$set":{
+        passwordResetToken: token,
+        passwordResetExpires: now,
+      }
+    });
+
+  } catch (err) {
+    res.status(400).send({ error: "Error on forgot password. try agin" });
+  }
 });
 
 module.exports = router;

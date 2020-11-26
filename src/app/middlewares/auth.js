@@ -1,7 +1,7 @@
 module.exports = (req, res, next) => {
     const authHeader = req.headers.autorization;
     const jwt = require("jsonwebtoken");
-    const authConfig = require("../config/auth");
+    const authConfig = require("../../config/auth");
 
     if(!authHeader)
         res.status(401).send({ error: "No token provided" });
