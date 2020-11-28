@@ -28,7 +28,10 @@ const UserSchema = new mongoose.Schema({
       createAt: {
         type: Date,
         default: Date.now,
-      }
+      },
+      unkownWords: {
+        type: Array,           
+     }
 });
 
 UserSchema.pre('save', async function(next){
