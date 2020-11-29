@@ -27,4 +27,21 @@ router.post("/add_unknown_words", async function (req, res) {
     }
 });
 
+router.post("/remove_unknown_words", async function (req, res) {
+    const { email, unkownWords } = req.body;
+
+    try {
+         const user = await User.findOne({ email });
+
+         if (!user) return res.status(400).send({ error: "User not found" });
+        
+         await user.updateOne({$pull: {unkownWords: { $in: unkownWords }}})
+
+         res.send();
+
+    } catch (err) {
+        res.status(400).send({ error: "Error on remove new unknown word." });
+    }
+});
+
 module.exports = router;
