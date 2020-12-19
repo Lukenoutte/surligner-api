@@ -5,7 +5,7 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const crypto = require("crypto");
 const mailer = require("../../modules/mailer");
-
+const authMiddleware = require('../middlewares/auth');
 const authConfig = require("../../config/auth");
 
 function generateToken(params = {}) {
@@ -35,11 +35,11 @@ router.post("/authenticate", async function (req, res) {
   const user = await User.findOne({ email }).select("+password");
 
   if (!user) {
-    res.status(400).send({ error: "User not found" });
+    res.status(400).send({ error: "User not found!" });
   }
 
   if (!(await bcrypt.compare(password, user.password))) {
-    res.status(400).send({ error: "Invalid password" });
+    res.status(400).send({ error: "Invalid password!" });
   }
   user.password = undefined;
 
@@ -115,6 +115,11 @@ router.post("/reset_password", async function (req, res) {
   } catch (erro) {
     res.status(400).send({ error: "Error on reset password. try again " });
   }
+});
+
+
+router.get('/verify_token', authMiddleware, (req, res) => {
+  res.send({ tokenStatus: true })
 });
 
 module.exports = router;
