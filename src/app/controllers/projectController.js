@@ -11,14 +11,14 @@ router.get("/", async function (req, res) {
 
 
 router.post("/add_unknown_words", async function (req, res) {
-    const { email, unkownWords } = req.body;
-
+    const { id, unkownWords } = req.body;
+    
     try {
-         const user = await User.findOne({ email });
-
-         if (!user) return res.status(400).send({ error: "User not found" });
+         const user = await User.findById( id );
         
-         await user.updateOne({$push: {unkownWords: unkownWords}})
+         if (!user) return res.status(400).send({ error: "User not found" });
+         
+         await user.updateOne({$push: unkownWords: unkownWords});
 
          res.send();
 
@@ -28,10 +28,10 @@ router.post("/add_unknown_words", async function (req, res) {
 });
 
 router.post("/remove_unknown_words", async function (req, res) {
-    const { email, unkownWords } = req.body;
+    const { id, unkownWords } = req.body;
 
     try {
-         const user = await User.findOne({ email });
+         const user = await User.findById( id );
 
          if (!user) return res.status(400).send({ error: "User not found" });
         

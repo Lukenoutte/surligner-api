@@ -30,7 +30,8 @@ const UserSchema = new mongoose.Schema({
         default: Date.now,
       },
       unkownWords: {
-        type: Array,           
+        type: Array,     
+           
      }
 });
 
