@@ -5,7 +5,7 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const crypto = require("crypto");
 const mailer = require("../../modules/mailer");
-const authMiddleware = require('../middlewares/auth');
+const authMiddleware = require("../middlewares/auth");
 const authConfig = require("../../config/auth");
 
 function generateToken(params = {}) {
@@ -30,20 +30,24 @@ router.post("/register", async function (req, res) {
 });
 
 router.post("/authenticate", async function (req, res) {
-  const { email, password } = req.body;
+  try {
+    const { email, password } = req.body;
 
-  const user = await User.findOne({ email }).select("+password");
+    const user = await User.findOne({ email }).select("+password");
 
-  if (!user) {
-    res.status(400).send({ error: "User not found!" });
+    if (!user) {
+      res.status(400).send({ error: "User not found!" });
+    }
+
+    if (!(await bcrypt.compare(password, user.password))) {
+      res.status(400).send({ error: "Invalid password!" });
+    }
+    user.password = undefined;
+
+    res.send({ user, token: generateToken({ id: user.id }) });
+  } catch (err) {
+    console.log(err);
   }
-
-  if (!(await bcrypt.compare(password, user.password))) {
-    res.status(400).send({ error: "Invalid password!" });
-  }
-  user.password = undefined;
-
-  res.send({ user, token: generateToken({ id: user.id }) });
 });
 
 router.post("/forgot_password", async function (req, res) {
@@ -85,7 +89,6 @@ router.post("/forgot_password", async function (req, res) {
       }
     );
   } catch (err) {
-
     res.status(400).send({ error: "Error on forgot password. try again " });
   }
 });
@@ -100,26 +103,26 @@ router.post("/reset_password", async function (req, res) {
 
     if (!user) return res.status(400).send({ error: "User not found" });
 
-    if(token !== user.passwordResetToken) return res.status(400).send({ error: "Invalid token" });
+    if (token !== user.passwordResetToken)
+      return res.status(400).send({ error: "Invalid token" });
 
     const now = new Date();
 
-    if(now > user.passwordResetExpires) return res.status(400).send({ error: "Token expired" });
-     
+    if (now > user.passwordResetExpires)
+      return res.status(400).send({ error: "Token expired" });
+
     user.password = password;
 
     await user.save();
 
     res.send();
-
   } catch (erro) {
     res.status(400).send({ error: "Error on reset password. try again " });
   }
 });
 
-
-router.get('/verify_token', authMiddleware, (req, res) => {
-  res.send({ tokenStatus: true })
+router.get("/verify_token", authMiddleware, (req, res) => {
+  res.send({ tokenStatus: true });
 });
 
 module.exports = router;

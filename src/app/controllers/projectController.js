@@ -18,7 +18,7 @@ router.post("/add_unknown_words", async function (req, res) {
         
          if (!user) return res.status(400).send({ error: "User not found" });
          
-         await user.updateOne({$push: unkownWords: unkownWords});
+         await user.updateOne({$push: {unkownWords: unkownWords}});
 
          res.send();
 
