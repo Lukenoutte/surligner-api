@@ -31,7 +31,7 @@ const UserSchema = new mongoose.Schema({
       },
       unkownWords: {
         type: Array,     
-           
+        select: false,
      }
 });
 
