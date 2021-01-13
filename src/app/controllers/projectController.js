@@ -9,6 +9,22 @@ router.get("/", async function (req, res) {
     res.send({ok: true});
 });
 
+router.post("/user_informations", async function (req, res) {
+    const { id } = req.body;
+    
+    try {
+        const user = await User.findById( id );
+       
+        if (!user) return res.status(400).send({ error: "User not found" });
+        
+       
+        res.send(user);
+
+   } catch (err) {
+       res.status(400).send({ error: "Error on get user information." });
+   }
+});
+
 router.post("/list_words", async function (req, res) {
     const { id } = req.body;
     
