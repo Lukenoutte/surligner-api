@@ -6,6 +6,7 @@ API para o projeto surligner, focado em armazenar e fornecer informações dos u
 
 - Node js
 - Express
+- Mongodb
 
 ## ✅ Requisitos
 
@@ -17,6 +18,7 @@ $ git clone https://github.com/Lukenoutte/surligner-api.git
 ```
 1. Crie uma arquivo auth.json na pasta src/config e adicione um hash em uma variavel chamada "secret".
 2. Crie uma arquivo mail.json na pasta src/config e adicione as configurações do serviço de e-mail.
+3. Crie um .env com uma variável chamada "DB_CONNECTION" com o link para seu banco de dados mongo.
 
 ### 
 
