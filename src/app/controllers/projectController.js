@@ -46,11 +46,13 @@ router.post("/add_unknown_words", async function (req, res) {
     const { id, unkownWords } = req.body;
     
     try {
-         const user = await User.findById( id );
+         const user = await User.findById( id ).select(
+            "+unkownWords");
         
          if (!user) return res.status(400).send({ error: "User not found" });
-         
-         await user.updateOne({$push: {unkownWords: unkownWords}});
+
+         let wordsFiltered = unkownWords.filter((item) => user.unkownWords.indexOf(item) < 0)
+         await user.updateOne({$push: {unkownWords: wordsFiltered}});
 
          res.send();
 
@@ -67,8 +69,8 @@ router.post("/remove_unknown_words", async function (req, res) {
 
          if (!user) return res.status(400).send({ error: "User not found" });
         
-         await user.updateOne({$pull: {unkownWords: { $in: unkownWords }}})
-
+        await user.updateOne({$pull: {unkownWords: { $in: unkownWords }}})
+      
          res.send();
 
     } catch (err) {
