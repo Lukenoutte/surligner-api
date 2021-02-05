@@ -93,6 +93,30 @@ router.post("/forgot_password", async function (req, res) {
   }
 });
 
+router.post("/verify_token_recover", async function (req, res) {
+  const { email, token } = req.body;
+
+  try {
+    const user = await User.findOne({ email }).select(
+      "+passwordResetToken passwordResetExpires"
+    );
+
+    if (!user) return res.status(400).send({ error: "User not found" });
+
+    if (token !== user.passwordResetToken)
+      return res.status(400).send({ error: "Invalid token" });
+
+    const now = new Date();
+
+    if (now > user.passwordResetExpires)
+      return res.status(400).send({ error: "Token expired" });
+
+    res.send();
+  } catch (erro) {
+    res.status(400).send({ error: "Error on validae token. try again " });
+  }
+});
+
 router.post("/reset_password", async function (req, res) {
   const { email, token, password } = req.body;
 
@@ -120,6 +144,8 @@ router.post("/reset_password", async function (req, res) {
     res.status(400).send({ error: "Error on reset password. try again " });
   }
 });
+
+
 
 router.get("/verify_token", authMiddleware, (req, res) => {
   res.send({ tokenStatus: true });
