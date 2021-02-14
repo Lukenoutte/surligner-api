@@ -78,4 +78,22 @@ router.post("/remove_unknown_words", async function (req, res) {
     }
 });
 
+
+router.post("/edit_user_info", async function (req, res) {
+    const { id, email, name } = req.body;
+
+    try {
+         const user = await User.findById( id );
+
+         if (!user) return res.status(400).send({ error: "User not found" });
+        
+        await user.updateOne({$set: {'name': name}}, {$set: {'email': email}})
+      
+         res.send();
+
+    } catch (err) {
+        res.status(400).send({ error: "Error on remove new unknown word." });
+    }
+});
+
 module.exports = router;
