@@ -5,9 +5,6 @@ const projectController = require('./app/controllers/projectController');
 const cors = require('cors');
 const https = require('https');
 const fs = require('fs');
-var privateKey  = fs.readFileSync('/etc/ssl/private/apache-selfsigned.key', 'utf8');
-var certificate = fs.readFileSync('/etc/ssl/certs/apache-selfsigned.crt', 'utf8');
-var credentials = {key: privateKey, cert: certificate};
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -17,6 +14,10 @@ app.use('/auth', authController);
 app.use('/projects', projectController);
 
 try{
+var privateKey  = fs.readFileSync('/etc/ssl/private/apache-selfsigned.key', 'utf8');
+var certificate = fs.readFileSync('/etc/ssl/certs/apache-selfsigned.crt', 'utf8');
+var credentials = {key: privateKey, cert: certificate};
+
 const httpsServer = https.createServer(credentials, app);
 
   httpsServer.listen(8443), () => {
@@ -24,7 +25,7 @@ const httpsServer = https.createServer(credentials, app);
 };
 
 }catch(err){
-console.log("Error: Fail to validate ssl");
+console.log(err);
 }
 
 app.listen(3333);
