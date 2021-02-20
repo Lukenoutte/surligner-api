@@ -151,4 +151,8 @@ router.get("/verify_token", authMiddleware, (req, res) => {
   res.send({ tokenStatus: true });
 });
 
+router.get("/", (req, res) => {
+  res.send({ status: 'Ok'});
+});
+
 module.exports = router;
