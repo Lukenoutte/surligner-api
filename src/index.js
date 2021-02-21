@@ -15,9 +15,6 @@ app.use('/', indexController);
 app.use('/auth', authController);
 app.use('/projects', projectController);
 
-
-
-  
 try{
 var privateKey  = fs.readFileSync('/etc/ssl/private/apache-selfsigned.key', 'utf8');
 var certificate = fs.readFileSync('/etc/ssl/certs/apache-selfsigned.crt', 'utf8');
@@ -32,6 +29,5 @@ httpsServer.listen(8443), () => {
 }catch(err){
 console.log(err);
 }
-
 
 
