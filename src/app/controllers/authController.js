@@ -145,16 +145,9 @@ router.post("/reset_password", async function (req, res) {
   }
 });
 
-
-
 router.get("/verify_token", authMiddleware, (req, res) => {
   res.send({ tokenStatus: true });
 });
 
-router.get("/", (req, res) => {
-  res.send({ status: 'Ok'});
-});
-
-router.get('/favicon.ico', (req, res) => res.status(204));
 
 module.exports = router;
