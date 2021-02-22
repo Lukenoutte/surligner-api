@@ -6,6 +6,7 @@ const indexController = require('./app/controllers/indexController');
 const cors = require('cors');
 const https = require('https');
 const fs = require('fs');
+const http = require('http');
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -22,6 +23,7 @@ var credentials = {key: privateKey, cert: certificate};
 
 const httpsServer = https.createServer(credentials, app);
 
+
 httpsServer.listen(8443), () => {
     console.log('HTTPS Server running on port 443');
 };
@@ -30,6 +32,9 @@ httpsServer.listen(8443), () => {
 console.log(err);
 }
 
-app.listen(3333);
+const httpServer = http.createServer(app);
+httpServer.listen(80, () => {
+    console.log('HTTP Server running on port 80');
+});
 
 
