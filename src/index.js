@@ -25,7 +25,7 @@ const httpsServer = https.createServer(credentials, app);
 
 
 httpsServer.listen(8443), () => {
-    console.log('HTTPS Server running on port 443');
+    console.log('HTTPS Server running on port 8443');
 };
 
 }catch(err){
@@ -33,8 +33,8 @@ console.log(err);
 }
 
 const httpServer = http.createServer(app);
-httpServer.listen(8880, () => {
-    console.log('HTTP Server running on port 8880');
+httpServer.listen(8080, () => {
+    console.log('HTTP Server running on port 8080');
 });
 
 
