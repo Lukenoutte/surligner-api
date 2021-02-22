@@ -33,8 +33,8 @@ console.log(err);
 }
 
 const httpServer = http.createServer(app);
-httpServer.listen(80, () => {
-    console.log('HTTP Server running on port 80');
+httpServer.listen(8880, () => {
+    console.log('HTTP Server running on port 8880');
 });
 
 
