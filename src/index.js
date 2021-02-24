@@ -16,8 +16,8 @@ app.use('/auth', authController);
 app.use('/projects', projectController);
 
 try{
-var privateKey  = fs.readFileSync('/etc/ssl/private/apache-selfsigned.key', 'utf8');
-var certificate = fs.readFileSync('/etc/ssl/certs/apache-selfsigned.crt', 'utf8');
+var privateKey  = fs.readFileSync('/etc/ssl/private/key.pem', 'utf8');
+var certificate = fs.readFileSync('/etc/ssl/certs/cert.pem', 'utf8');
 var credentials = {key: privateKey, cert: certificate};
 
 const httpsServer = https.createServer(credentials, app);
@@ -28,7 +28,7 @@ httpsServer.listen(8443), () => {
 };
 
 }catch(err){
-console.log(err);
+console.log("Fail to connect https port!");
 }
 
 
